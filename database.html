@@ -1,0 +1,59 @@
+<script src="https://www.gstatic.com/firebasejs/4.6.0/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.6.0/firebase-firestore.js"></script>
+<script src="https://unpkg.com/jquery"></script>
+
+<body>
+    <section id="input">
+        <form>
+            <input id="name" type="text" placeholder="name">
+            <input id="campus" type="text" placeholder="campus">
+            <input id="add" type="button" value="Add">
+            
+        </form>
+    </section>
+    <section class="users"></section>
+    <script>
+    // Initialize Firebase
+    // TODO: Replace with your project's customized code snippet
+    firebase.initializeApp({
+        apiKey: "AIzaSyCBHTVpnPX7TSaokANsw9cVP1FUyONcSVM",
+        authDomain: "talentbandung-eabcb.firebaseapp.com",
+        projectId: "talentbandung-eabcb"
+    });
+    
+    const db = firebase.firestore();
+
+    $('#add').on('click', e => {
+        e.preventDefault();
+        const data = {
+            name: $('#name').val(),
+            campus: $('#campus').val(),
+        }
+        db.collection(`user`).add(data)
+            .then(()=>update())
+            .catch(console.error);
+    })
+
+    function update(){
+        $('.users').empty();
+        db.collection(`user`).get()
+            .then(query => {
+                query.forEach(data => {
+                    $('.users').append($(`<div>${data.data().name} - ${data.data().campus}</div>`));
+                });
+            return query;
+        }).catch(console.error);
+    }
+
+    
+
+$(document).on('load',() => {
+    update();
+})
+    //   db.collection("user2").add({
+    //       name: "Bayuns",
+    //       slug: "Bayu NS"
+    //   });
+    </script>
+
+</body>
